@@ -7,26 +7,28 @@ from picks import GuitarPick, SouvenirPick, GuitarPickCollection
 
 
 class CommandWords:
-    valid_command = ['list', 'search', 'add', 'help', 'quit']
+    def __init__(self):
+        self.valid_command = ['list', 'search', 'add', 'help', 'quit']
 
-    @classmethod
-    def is_command(cls, a_string):
+    def is_command(self, a_string):
         if not (a_string is None):
-            for command in valid_command:
+            for command in self.valid_command:
                 if command == a_string:
                     return True
         return False
 
-    @classmethod
-    def get_all(cls):
-        ret_str = ""
-        for command in valid_command:
-            ret_str += command
+    def get_all(self):
+        ret_str = ''
+        for command in self.valid_command:
+            ret_str += command + ' '
         return ret_str
 
 
 class Parser:
-    def get_command():
+    def __init__(self):
+        self.command_words = CommandWords()
+
+    def get_command(self):
         '''Read the next command from the user.
         The returned command will be valid.
 
@@ -36,10 +38,15 @@ class Parser:
         do = True
         while do:
             word = input('> ').strip().lower()
-            if (CommandWords.is_command(word)):
+            if (self.command_words.is_command(word)):
                 command = word
             else:
                 print('Unrecognized command: ' + word)
-                print('Valid commands are: ' + CommandWords.get_all())
+                print('Valid commands are: ' + self.command_words.get_all())
             do = (command == '')
-        return commmand
+        return command
+
+
+if __name__ == '__main__':
+   parser = Parser()
+   parser.get_command()
