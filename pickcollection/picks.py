@@ -33,7 +33,7 @@ class GuitarPick:
         '''
         return ((field == 'name' and self.name == value) or
                 (field == 'color' and self.color == value))
-    
+
 
 class SouvenirPick(GuitarPick):
     def __init__(self, name, location, year, color, isFunctional):
@@ -55,7 +55,7 @@ class SouvenirPick(GuitarPick):
                 (field == 'location' and self.location == value) or
                 (field == 'year' and self.year == value) or
                 (field == 'isFunctional' and isFunctional == value))
-    
+
     def print_details(self):
         print('Name: ' + self.name)
         print('From: ' + str(self.location))
@@ -65,7 +65,12 @@ class SouvenirPick(GuitarPick):
         else:
             print('is a novelty pick')
         print('Year obtained: ' + str(self.year))
-    
+
+
+class PlayingPick(GuitarPick):
+    pass
+
+
 
 class GuitarPickCollection:
     def __init__(self):
@@ -84,7 +89,7 @@ class GuitarPickCollection:
 ##        for pick in self.picks:
 ##            if pick.name == name:
 ##                print(pick)
-                
+
     def search(self, field, value):
         matching_picks = []
         for pick in self.picks:
@@ -104,13 +109,13 @@ class GuitarPickCollection:
         self.picks.append(SouvenirPick("Cooter's Garage", Location("Gatlinburg", "TN"),
                 2019, "purple", True))
         self.picks.append(SouvenirPick("Cooter's Garage", Location("Gatlinburg", "TN"),
-                2019, "orange", True)) 
+                2019, "orange", True))
         self.picks.append(SouvenirPick("Mothman Search Team", Location("Point Pleasant", "WV"),
                 2017, "black", True))
         self.picks.append(SouvenirPick("Mothman Search Team", Location("Point Pleasant", "WV"),
                 2017, "green", True))
         self.picks.append(SouvenirPick("JWT School of Rock", Location("Pikeville", "KY"),
-                2016, "black", True))        
+                2016, "black", True))
 
 
 if __name__ == '__main__':
@@ -124,10 +129,3 @@ if __name__ == '__main__':
     in2017 = collection.search('year', 2017)
     for pick in in2017:
         print(pick)
-
-     
-
-        
-
-    
-    
