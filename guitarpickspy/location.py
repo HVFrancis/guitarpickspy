@@ -16,14 +16,14 @@ class Location:
         '''
         self.city = city
         self.state = state
-        
+
     def __str__(self):
         return self.city + ', ' + self.state
 
     def __eq__(self, other):
         if self is other:
             return true
-        elif not isInstance(other, Location):
+        elif not isinstance(other, Location):
             return false
         else:
             return (self.city == other.city and
@@ -47,5 +47,3 @@ class Location:
 
     def __ge__(self, other):
         return not self < other
-
-    
