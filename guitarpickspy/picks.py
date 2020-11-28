@@ -1,9 +1,43 @@
-# This module contains classes for maintaining a colleciton of
-# Guitar Picks
+'''Classes used to keep track of a guitar pick populate_collection
+
+This module contains the basic classes necessary to manage a
+collection of guitar picks. These were first developed in Java
+and are rewritten in Python as a way for the author to improve
+his Python skills
+
+Classes
+-------
+    GuitarPick
+        a super class for two (so far) types of guitar picks
+    SouvenirPick
+        picks accumulated as a souvenir for travel or events
+    PlayingPick
+        picks that would actually be used for playing guitar
+    GuitarPickCollection
+        a class to manage a collection of picks
+'''
 
 from location import Location
 
 class GuitarPick:
+    '''a super class for various categories of guitar picks
+
+    This class keeps track of the name (writing) of the pick
+    and its primary color. Subclasses are expected to keep
+    track of other properties.
+
+    Attributes
+    ----------
+        name: str
+            the name of the pick, usually any writing on it
+        color: str
+            the predominant color of the pick
+
+    Methods
+    -------
+        exists(field, value) -> boolean
+            returns True if the picks 'field' is 'value'
+    '''
     def __init__(self, name, color):
         self.name = name
         self.color = color
@@ -14,7 +48,7 @@ class GuitarPick:
     def __eq__(self, other):
         if self is other:
             return true
-        elif not isInstance(other, GuitarPick):
+        elif not isinstance(other, GuitarPick):
             return false
         else:
             return (self.name == other.name and
@@ -27,9 +61,11 @@ class GuitarPick:
             return self.name < other.name
 
     def exists(self, field, value):
-        '''This method returns true if the object's property
-        specified by 'field' has the value specified by 'value'
+        '''returns True if the picks 'field' is 'value'
 
+        This method returns true if the object's property
+        specified by 'field' has the value specified by 'value'.
+        It is used in search methods
         '''
         return ((field == 'name' and self.name == value) or
                 (field == 'color' and self.color == value))
@@ -47,14 +83,16 @@ class SouvenirPick(GuitarPick):
                 (self.color, self.name, str(self.location), self.year))
 
     def exists(self, field, value):
-        '''This method returns true if the object's property
-        specified by 'field' has the value specified by 'value'
+        '''returns True if the picks 'field' is 'value'
 
+        This method returns true if the object's property
+        specified by 'field' has the value specified by 'value'.
+        It is used in search methods
         '''
         return ((super().exists(field, value)) or
                 (field == 'location' and self.location == value) or
                 (field == 'year' and self.year == value) or
-                (field == 'isFunctional' and isFunctional == value))
+                (field == 'isFunctional' and self.isFunctional == value))
 
     def print_details(self):
         print('Name: ' + self.name)
@@ -68,6 +106,18 @@ class SouvenirPick(GuitarPick):
 
 
 class PlayingPick(GuitarPick):
+    '''a pick that is actually used for playing a guitar
+
+    This class will represent picks in a collection which are
+    actually used for playing a guitar
+
+    (Expected) Attributes
+    ---------------------
+        thickness: float
+            the thickness of the pick in mm
+        quantity: int
+            the number of this type of pick owned
+    '''
     pass
 
 
@@ -75,7 +125,6 @@ class PlayingPick(GuitarPick):
 class GuitarPickCollection:
     def __init__(self):
         self.picks = []
-##        self.populate_collection()
 
     def add_pick(self, pick):
         self.picks.append(pick)
@@ -97,6 +146,8 @@ class GuitarPickCollection:
                 matching_picks.append(pick)
         return matching_picks
 
+# I think these statements need to be reformated to fit into
+# Python's 72-char limit (and related programming convensions)
     def populate_collection(self):
         self.picks.append(SouvenirPick("Nashville", Location("Nashville", "TN"),
                 2018, "purple", True))
@@ -128,4 +179,8 @@ if __name__ == '__main__':
 
     in2017 = collection.search('year', 2017)
     for pick in in2017:
+        print(pick)
+
+    nashville = collection.search('location', Location('Nashville', 'TN'))
+    for pick in nashville:
         print(pick)
