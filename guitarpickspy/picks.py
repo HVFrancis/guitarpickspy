@@ -20,6 +20,11 @@ Classes
 from location import Location
 import pickle
 
+def str2bool(v):
+    return v == 'True'
+
+
+
 class GuitarPick:
     '''a super class for various categories of guitar picks
 
@@ -36,8 +41,8 @@ class GuitarPick:
 
     Methods
     -------
-        exists(field, value) -> boolean
-            returns True if the picks 'field' is 'value'
+        matches(field, value) -> boolean
+            returns True if the pick's 'field' is 'value'
     '''
     def __init__(self, name, color):
         self.name = name
@@ -69,7 +74,10 @@ class GuitarPick:
         It is used in search methods
         '''
         return ((field == 'name' and self.name == value) or
-                (field == 'color' and self.color == value))
+            (field == 'color' and self.color == value))
+
+    def file_str(self):
+        return '%s,%s' % (self.name, self.color)
 
 
 class SouvenirPick(GuitarPick):
@@ -81,7 +89,7 @@ class SouvenirPick(GuitarPick):
 
     def __str__(self):
         return ('A %s pick that says %s from %s in %d.' %
-                (self.color, self.name, str(self.location), self.year))
+            (self.color, self.name, str(self.location), self.year))
 
     def matches(self, field, value):
         '''returns True if the picks 'field' is 'value'
@@ -91,9 +99,9 @@ class SouvenirPick(GuitarPick):
         It is used in search methods
         '''
         return ((super().matches(field, value)) or
-                (field == 'location' and self.location == value) or
-                (field == 'year' and self.year == value) or
-                (field == 'isFunctional' and self.isFunctional == value))
+            (field == 'location' and self.location == value) or
+            (field == 'year' and self.year == value) or
+            (field == 'isFunctional' and self.isFunctional == value))
 
     def print_details(self):
         print('Name: ' + self.name)
@@ -106,12 +114,13 @@ class SouvenirPick(GuitarPick):
         print('Year obtained: ' + str(self.year))
 
     def file_str(self):
-        return '%s,%s,%s,%s,%d,%s' % (self.name,
-                              self.color,
-                              self.location.city,
-                              self.location.state,
-                              self.year,
-                              str(self.isFunctional))
+        return '%s,%s,%s,%s,%d,%s' % (
+            self.name,
+            self.color,
+            self.location.city,
+            self.location.state,
+            self.year,
+            str(self.isFunctional))
 
 class PlayingPick(GuitarPick):
     '''a pick that is actually used for playing a guitar
@@ -154,7 +163,10 @@ class GuitarPickCollection:
                 matching_picks.append(pick)
         return matching_picks
 
-    def save_csv(self, filename):
+    def write_csv(self, filename):
+        '''Write the contents of the collection to a text file
+
+        '''
         try:
             fout = open(filename, 'w')
             for pick in self.picks:
@@ -162,6 +174,41 @@ class GuitarPickCollection:
             fout.close()
         except:
             print('Error writing to file: %s' % filename)
+
+
+    def read_csv(self, filename):
+        '''adds records from a CSV file into the collection
+
+        This method is based on work by BlueJ
+        Currently this method only works for adding SouvenirPick objects
+        '''
+        NAME = 0
+        COLOR = 1
+        CITY = 2
+        STATE = 3
+        YEAR = 4
+        FUNCTIONAL = 5
+        try:
+            fin = open(filename, 'r')
+            for line in fin:
+                if len(line) > 0 and line[0] != '#':
+                    parts = line[:-1].split(',')
+                    name = parts[NAME]
+                    color = parts[COLOR]
+                    city = parts[CITY]
+                    state = parts[STATE]
+                    year = int(parts[YEAR])
+                    isFunctional = str2bool(parts[FUNCTIONAL])
+                    self.picks.append(SouvenirPick(
+                        name,
+                        Location(city, state),
+                        year,
+                        color,
+                        isFunctional))
+        except FileNotFoundError:
+            print('No such file: %s' % filename)
+        except ValueError:
+            print('%s does not have proper format' % filename)
 
     def save(self, filename):
         '''This method will save the collection as a single data file
@@ -232,7 +279,7 @@ def tryit():
     # for pick in collection.picks:
     #     print(pick.file_str())
 
-    collection.save_csv('picks.csv')
+    collection.write_csv('picks.csv')
     collection.save('picks.gpc')
 
 def try_open():
@@ -243,6 +290,12 @@ def try_open():
     for pick in collection.picks:
         print(pick)
 
+def try_read():
+    collection = GuitarPickCollection()
+    collection.read_csv('picks.csv')
+    collection.list_all()
+
 if __name__ == '__main__':
-    tryit()
+#    tryit()
 #    try_open()
+    try_read()
