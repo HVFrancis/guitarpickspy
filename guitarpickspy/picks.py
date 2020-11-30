@@ -18,6 +18,7 @@ Classes
 '''
 
 from location import Location
+import pickle
 
 class GuitarPick:
     '''a super class for various categories of guitar picks
@@ -158,8 +159,37 @@ class GuitarPickCollection:
             fout = open(filename, 'w')
             for pick in self.picks:
                 fout.write(pick.file_str() + '\n')
+            fout.close()
         except:
             print('Error writing to file: %s' % filename)
+
+    def save(self, filename):
+        '''This method will save the collection as a single data file
+
+        '''
+        try:
+            fout = open(filename, 'wb')
+            pickle.dump(self, fout)
+            fout.close()
+        except Exception as error:
+            print('Error saving to file: %s' % filename)
+            print('Error reported: %s', error)
+
+    def open(self, filename):
+        '''This method will open a file storing a collection
+
+        '''
+        try:
+            fin = open(filename, 'rb')
+            new_picks = pickle.load(fin)
+            assert isinstance(new_picks, GuitarPickCollection)
+            self.picks = new_picks.picks
+        except FileNotFoundError:
+            print('No such file: %s' % filename)
+        except (AssertionError, pickle.UnpicklingError):
+            print('%s not a guitar pick collection file' % filename)
+
+
 
 # I think these statements need to be reformated to fit into
 # Python's 72-char limit (and related programming convensions)
@@ -203,6 +233,16 @@ def tryit():
     #     print(pick.file_str())
 
     collection.save_csv('picks.csv')
+    collection.save('picks.gpc')
+
+def try_open():
+    collection = GuitarPickCollection()
+#    collection.open('picks.csv')
+    collection.open('picks.gpc')
+    collection.list_all()
+    for pick in collection.picks:
+        print(pick)
 
 if __name__ == '__main__':
     tryit()
+#    try_open()
