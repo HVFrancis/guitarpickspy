@@ -60,7 +60,7 @@ class GuitarPick:
         else:
             return self.name < other.name
 
-    def exists(self, field, value):
+    def matches(self, field, value):
         '''returns True if the picks 'field' is 'value'
 
         This method returns true if the object's property
@@ -82,14 +82,14 @@ class SouvenirPick(GuitarPick):
         return ('A %s pick that says %s from %s in %d.' %
                 (self.color, self.name, str(self.location), self.year))
 
-    def exists(self, field, value):
+    def matches(self, field, value):
         '''returns True if the picks 'field' is 'value'
 
         This method returns true if the object's property
         specified by 'field' has the value specified by 'value'.
         It is used in search methods
         '''
-        return ((super().exists(field, value)) or
+        return ((super().matches(field, value)) or
                 (field == 'location' and self.location == value) or
                 (field == 'year' and self.year == value) or
                 (field == 'isFunctional' and self.isFunctional == value))
@@ -104,6 +104,13 @@ class SouvenirPick(GuitarPick):
             print('is a novelty pick')
         print('Year obtained: ' + str(self.year))
 
+    def file_str(self):
+        return '%s,%s,%s,%s,%d,%s' % (self.name,
+                              self.color,
+                              self.location.city,
+                              self.location.state,
+                              self.year,
+                              str(self.isFunctional))
 
 class PlayingPick(GuitarPick):
     '''a pick that is actually used for playing a guitar
@@ -142,13 +149,21 @@ class GuitarPickCollection:
     def search(self, field, value):
         matching_picks = []
         for pick in self.picks:
-            if pick.exists(field, value):
+            if pick.matches(field, value):
                 matching_picks.append(pick)
         return matching_picks
 
+    def save_csv(self, filename):
+        try:
+            fout = open(filename, 'w')
+            for pick in self.picks:
+                fout.write(pick.file_str() + '\n')
+        except:
+            print('Error writing to file: %s' % filename)
+
 # I think these statements need to be reformated to fit into
 # Python's 72-char limit (and related programming convensions)
-    def populate_collection(self):
+    def _populate_collection(self):
         self.picks.append(SouvenirPick("Nashville", Location("Nashville", "TN"),
                 2018, "purple", True))
         self.picks.append(SouvenirPick("Nashville", Location("Nashville", "TN"),
@@ -168,10 +183,9 @@ class GuitarPickCollection:
         self.picks.append(SouvenirPick("JWT School of Rock", Location("Pikeville", "KY"),
                 2016, "black", True))
 
-
-if __name__ == '__main__':
+def tryit():
     collection = GuitarPickCollection()
-    collection.populate_collection()
+    collection._populate_collection()
     collection.list_all()
     purple = collection.search('color', 'purple')
     for pick in purple:
@@ -184,3 +198,11 @@ if __name__ == '__main__':
     nashville = collection.search('location', Location('Nashville', 'TN'))
     for pick in nashville:
         print(pick)
+
+    # for pick in collection.picks:
+    #     print(pick.file_str())
+
+    collection.save_csv('picks.csv')
+
+if __name__ == '__main__':
+    tryit()
