@@ -8,18 +8,24 @@ from picks import GuitarPick, SouvenirPick, GuitarPickCollection
 
 class CommandWords:
     def __init__(self):
-        self.valid_command = ['list', 'search', 'add', 'help', 'about', 'quit']
-
+        self.valid_commands = {
+            'list': 'list all picks',
+             'search': 'search for a pick',
+              'add': 'add a souvenir pick to the collection',
+              'help': 'list all commands',
+              'about': 'display app information',
+              'quit': 'exit the program'
+        }
     def is_command(self, a_string):
         if not (a_string is None):
-            for command in self.valid_command:
+            for command in self.valid_commands.keys():
                 if command == a_string:
                     return True
         return False
 
     def get_all(self):
         ret_str = ''
-        for command in self.valid_command:
+        for command in self.valid_commands.keys():
             ret_str += command + ' '
         return ret_str
 
@@ -54,23 +60,23 @@ class PickCollectionTextInterface:
         self.collection = GuitarPickCollection()
         self.parser = Parser()
 
-#helper methods to implement commands 
-    def _list(self):
+#helper methods to implement commands
+    def _list(self, command):
         pass
 
-    def _search(self):
+    def _search(self, command):
         pass
 
-    def _add(self):
+    def _add(self, command):
         pass
 
-    def _help(self):
+    def _help(self, command):
         pass
 
-    def _about(self):
+    def _about(self, command):
         print('Guitar Pick Collection')
 
-    def _quit(self):
+    def _quit(self, command):
         pass
 
     def run(self):
@@ -91,7 +97,7 @@ class PickCollectionTextInterface:
         while do:
             command = self.parser.get_command()
             func = switcher.get(command)
-            func()
+            func(command)
             do = (not command == 'quit')
 
         print('Good bye')
