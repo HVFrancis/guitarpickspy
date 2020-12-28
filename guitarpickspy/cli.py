@@ -72,7 +72,26 @@ class PickCollectionTextInterface:
         pass
 
     def _add(self, value):
-        pass
+        self._add_souvenir()
+
+    def _add_souvenir(self):
+        name = input('Name of pick: ')
+        color = input('Color of pick: ')
+        city = input('From where (city): ')
+        state = input('(state): ')
+        year = input('When (year): ')
+        play = input('Is it a real pick? ')
+        if play.strip().lower()[0] == 'n':
+            functional = False
+        else:
+            functional = True
+        self.collection.add_pick(SouvenirPick(
+            name,
+            Location(city, state),
+            year,
+            color,
+            functional
+        ))
 
     def _help(self, value):
         if value == '':
