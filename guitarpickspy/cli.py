@@ -1,5 +1,5 @@
 # This is a command line interface for the GuitarPickCollection class
-# It borrows heavily from code done in the BlueJ book
+# It borrows heavily from code presented in the BlueJ book
 # by David J. Barnes and Michael Kölling.
 
 from location import Location
@@ -10,11 +10,11 @@ class CommandWords:
     def __init__(self):
         self.valid_commands = {
             'list': 'list all picks',
-             'search': 'search for a pick',
-              'add': 'add a souvenir pick to the collection',
-              'help': 'list all commands',
-              'about': 'display app information',
-              'quit': 'exit the program'
+            'search': 'search for a pick',
+            'add': 'add a souvenir pick to the collection',
+            'help': 'list all commands',
+            'about': 'display app information',
+            'quit': 'exit the program'
         }
     def is_command(self, a_string):
         if not (a_string is None):
@@ -41,16 +41,20 @@ class Parser:
         returns: a valid command
         '''
         command = ''
+        value = ''
         do = True
         while do:
-            word = input('> ').strip().lower()
+            wordlist = input('> ').strip().lower().split()
+            word = wordlist[0]
             if (self.command_words.is_command(word)):
                 command = word
+                if len(wordlist) >= 2:
+                    value = wordlist[1]
             else:
                 print('Unrecognized command: ' + word)
                 print('Valid commands are: ' + self.command_words.get_all())
             do = (command == '')
-        return command
+        return command, value
 
 
 
@@ -61,22 +65,27 @@ class PickCollectionTextInterface:
         self.parser = Parser()
 
 #helper methods to implement commands
-    def _list(self, command):
+    def _list(self, value):
+        self.collection.list_all()
+
+    def _search(self, value):
         pass
 
-    def _search(self, command):
+    def _add(self, value):
         pass
 
-    def _add(self, command):
-        pass
+    def _help(self, value):
+        if value == '':
+            print('Valid commands are:')
+            print(self.parser.command_words.get_all())
+        else:
+            meaning = self.parser.command_words.valid_commands[value]
+            print(f"{value}: {meaning}")
 
-    def _help(self, command):
-        pass
-
-    def _about(self, command):
+    def _about(self, value):
         print('Guitar Pick Collection')
 
-    def _quit(self, command):
+    def _quit(self, value):
         pass
 
     def run(self):
@@ -95,9 +104,9 @@ class PickCollectionTextInterface:
         command = ''
         do = True
         while do:
-            command = self.parser.get_command()
+            command, value  = self.parser.get_command()
             func = switcher.get(command)
-            func(command)
+            func(value)
             do = (not command == 'quit')
 
         print('Good bye')
