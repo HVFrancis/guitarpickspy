@@ -35,11 +35,11 @@ class Parser:
         self.command_words = CommandWords()
 
     def get_command(self):
-        '''Read the next command from the user.
+        """Read the next command from the user.
         The returned command will be valid.
 
         returns: a valid command
-        '''
+        """
         command = ''
         value = ''
         do = True

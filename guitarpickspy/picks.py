@@ -1,4 +1,4 @@
-'''Classes used to keep track of a guitar pick populate_collection
+"""Classes used to keep track of a guitar pick populate_collection
 
 This module contains the basic classes necessary to manage a
 collection of guitar picks. These were first developed in Java
@@ -15,7 +15,7 @@ Classes
         picks that would actually be used for playing guitar
     GuitarPickCollection
         a class to manage a collection of picks
-'''
+"""
 
 from location import Location
 import pickle
@@ -26,7 +26,7 @@ def str2bool(v):
 
 
 class GuitarPick:
-    '''a super class for various categories of guitar picks
+    """a super class for various categories of guitar picks
 
     This class keeps track of the name (writing) of the pick
     and its primary color. Subclasses are expected to keep
@@ -43,7 +43,7 @@ class GuitarPick:
     -------
         matches(field, value) -> boolean
             returns True if the pick's 'field' is 'value'
-    '''
+    """
     def __init__(self, name, color):
         self.name = name
         self.color = color
@@ -67,12 +67,12 @@ class GuitarPick:
             return self.name < other.name
 
     def matches(self, field, value):
-        '''returns True if the picks 'field' is 'value'
+        """returns True if the pick's 'field' is 'value'
 
         This method returns true if the object's property
         specified by 'field' has the value specified by 'value'.
         It is used in search methods
-        '''
+        """
         return ((field == 'name' and self.name == value) or
             (field == 'color' and self.color == value))
 
@@ -92,12 +92,12 @@ class SouvenirPick(GuitarPick):
             (self.color, self.name, str(self.location), self.year))
 
     def matches(self, field, value):
-        '''returns True if the picks 'field' is 'value'
+        """returns True if the picks 'field' is 'value'
 
         This method returns true if the object's property
         specified by 'field' has the value specified by 'value'.
         It is used in search methods
-        '''
+        """
         return ((super().matches(field, value)) or
             (field == 'location' and self.location == value) or
             (field == 'year' and self.year == value) or
@@ -123,7 +123,7 @@ class SouvenirPick(GuitarPick):
             str(self.isFunctional))
 
 class PlayingPick(GuitarPick):
-    '''a pick that is actually used for playing a guitar
+    """a pick that is actually used for playing a guitar
 
     This class will represent picks in a collection which are
     actually used for playing a guitar
@@ -134,7 +134,7 @@ class PlayingPick(GuitarPick):
             the thickness of the pick in mm
         quantity: int
             the number of this type of pick owned
-    '''
+    """
     pass
 
 
@@ -164,9 +164,8 @@ class GuitarPickCollection:
         return matching_picks
 
     def write_csv(self, filename):
-        '''Write the contents of the collection to a text file
-
-        '''
+        """Write the contents of the collection to a text file
+        """
         try:
             fout = open(filename, 'w')
             for pick in self.picks:
@@ -177,11 +176,11 @@ class GuitarPickCollection:
 
 
     def read_csv(self, filename):
-        '''adds records from a CSV file into the collection
+        """adds records from a CSV file into the collection
 
         This method is based on work by BlueJ
         Currently this method only works for adding SouvenirPick objects
-        '''
+        """
         NAME = 0
         COLOR = 1
         CITY = 2
@@ -211,9 +210,8 @@ class GuitarPickCollection:
             print('%s does not have proper format' % filename)
 
     def save(self, filename):
-        '''This method will save the collection as a single data file
-
-        '''
+        """This method will save the collection as a single data file
+        """
         try:
             fout = open(filename, 'wb')
             pickle.dump(self, fout)
@@ -223,9 +221,8 @@ class GuitarPickCollection:
             print('Error reported: %s', error)
 
     def open(self, filename):
-        '''This method will open a file storing a collection
-
-        '''
+        """This method will open a file storing a collection
+        """
         try:
             fin = open(filename, 'rb')
             new_picks = pickle.load(fin)

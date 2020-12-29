@@ -4,16 +4,16 @@
 
 
 class Location:
-    '''A location represents a place, usually
+    """A location represents a place, usually
     a city and a state
-    '''
+    """
     def __init__(self, city, state):
-        '''Initialize an object of class Location
+        """Initialize an object of class Location
 
         Parameters:
             city (str) - the city of the location
             state (str) - the state (but could be country, etc)
-        '''
+        """
         self.city = city
         self.state = state
 
@@ -33,7 +33,8 @@ class Location:
         return not self == other
 
     def __lt__(self, other):
-        '''Locations are ordered alphabetically by city, then state'''
+        """Locations are ordered alphabetically by city, then state
+        """
         if self.city == other.city:
             return self.state < other.state
         else:
