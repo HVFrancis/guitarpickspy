@@ -52,7 +52,8 @@ class GuitarPick:
         self.color = color
 
     def __str__(self):
-        return 'A ' + self.color + ' pick that says ' + self.name
+#        return 'A ' + self.color + ' pick that says ' + self.name
+        return f"A {self.color} pick that says {self.name}"
 
     def __eq__(self, other):
         if self is other:
@@ -80,8 +81,8 @@ class GuitarPick:
             (field == 'color' and self.color == value))
 
     def file_str(self):
-        return '%s,%s' % (self.name, self.color)
-
+#        return '%s,%s' % (self.name, self.color)
+        return f"{self.name},{self.color}"
 
 class SouvenirPick(GuitarPick):
     def __init__(self, name, location, year, color, isFunctional):
@@ -91,8 +92,11 @@ class SouvenirPick(GuitarPick):
         self.isFunctional = isFunctional
 
     def __str__(self):
-        return ('A %s pick that says %s from %s in %d.' %
-            (self.color, self.name, str(self.location), self.year))
+#        return ('A %s pick that says %s from %s in %d.' %
+#            (self.color, self.name, str(self.location), self.year))
+        return (f"A {self.color} pick that says '{self.name}' " +
+                f"from {self.location} in {self.year}")
+
 
     def matches(self, field, value):
         """returns True if the picks 'field' is 'value'
@@ -107,23 +111,32 @@ class SouvenirPick(GuitarPick):
             (field == 'isFunctional' and self.isFunctional == value))
 
     def print_details(self):
-        print('Name: ' + self.name)
-        print('From: ' + str(self.location))
-        print('Color(s): + ' + self.color)
+        """print the full details of the pick
+
+        This method displays, one line at a time, each attribute
+        of this guitar pick
+        """
+        # print('Name: ' + self.name)
+        # print('From: ' + str(self.location))
+        # print('Color(s): + ' + self.color)
+        # if self.isFunctional:
+        #     print('is a real pick')
+        # else:
+        #     print('is a novelty pick')
+        # print('Year obtained: ' + str(self.year))
+        print(f"Name: {self.name}")
+        print(f"From: {self.location}")
+        print(f"Color(s): {self.color}")
         if self.isFunctional:
-            print('is a real pick')
+            print("is a real pick")
         else:
-            print('is a novelty pick')
-        print('Year obtained: ' + str(self.year))
+            print("is a novelty pick")
+        print(f"Year obtained: {self.year}")
 
     def file_str(self):
-        return '%s,%s,%s,%s,%d,%s' % (
-            self.name,
-            self.color,
-            self.location.city,
-            self.location.state,
-            self.year,
-            str(self.isFunctional))
+#        return '%s,%s,%s,%s,%d,%s' % (
+        return (f"{self.name},{self.color},{self.location.city}," +
+                f"{self.location.state},{self.year},{self.isFunctional}")
 
 class PlayingPick(GuitarPick):
     """a pick that is actually used for playing a guitar
@@ -176,7 +189,8 @@ class GuitarPickCollection:
                 fout.write(pick.file_str() + '\n')
             fout.close()
         except:
-            print('Error writing to file: %s' % filename)
+#            print('Error writing to file: %s' % filename)
+            print(f"Error writing to file {filename}")
 
 
     def read_csv(self, filename):
@@ -209,9 +223,11 @@ class GuitarPickCollection:
                         color,
                         isFunctional))
         except FileNotFoundError:
-            print('No such file: %s' % filename)
+#            print('No such file: %s' % filename)
+            print(f"No such file: {filename}")
         except ValueError:
-            print('%s does not have proper format' % filename)
+#            print('%s does not have proper format' % filename)
+            print(f"{filename} does not have proper format")
 
     def save(self, filename):
         """This method will save the collection as a single data file
@@ -221,8 +237,10 @@ class GuitarPickCollection:
             pickle.dump(self, fout)
             fout.close()
         except Exception as error:
-            print('Error saving to file: %s' % filename)
-            print('Error reported: %s', error)
+#            print('Error saving to file: %s' % filename)
+#            print('Error reported: %s', error)
+            print(f"Error saving to file: {filename}")
+            print(f"Error reported as {error}")
 
     def open(self, filename):
         """This method will open a file storing a collection
@@ -233,32 +251,39 @@ class GuitarPickCollection:
             assert isinstance(new_picks, GuitarPickCollection)
             self.picks = new_picks.picks
         except FileNotFoundError:
-            print('No such file: %s' % filename)
+#            print('No such file: %s' % filename)
+            print(f"No such file as {filename}")
         except (AssertionError, pickle.UnpicklingError):
-            print('%s not a guitar pick collection file' % filename)
+#            print('%s not a guitar pick collection file' % filename)
+            print(f"{filename} is not a guitar pick collection file")
 
-
-
-# I think these statements need to be reformated to fit into
-# Python's 72-char limit (and related programming convensions)
     def _populate_collection(self):
-        self.picks.append(SouvenirPick("Nashville", Location("Nashville", "TN"),
+        self.picks.append(SouvenirPick("Nashville",
+                Location("Nashville", "TN"),
                 2018, "purple", True))
-        self.picks.append(SouvenirPick("Nashville", Location("Nashville", "TN"),
+        self.picks.append(SouvenirPick("Nashville",
+                Location("Nashville", "TN"),
                 2018, "orange", True))
-        self.picks.append(SouvenirPick("Memphis", Location("Memphis", "TN"),
+        self.picks.append(SouvenirPick("Memphis",
+                Location("Memphis", "TN"),
                 2017, "purple", True))
-        self.picks.append(SouvenirPick("Memphis", Location("Memphis", "TN"),
+        self.picks.append(SouvenirPick("Memphis",
+                Location("Memphis", "TN"),
                 2017, "orange", True))
-        self.picks.append(SouvenirPick("Cooter's Garage", Location("Gatlinburg", "TN"),
+        self.picks.append(SouvenirPick("Cooter's Garage",
+                Location("Gatlinburg", "TN"),
                 2019, "purple", True))
-        self.picks.append(SouvenirPick("Cooter's Garage", Location("Gatlinburg", "TN"),
+        self.picks.append(SouvenirPick("Cooter's Garage",
+                Location("Gatlinburg", "TN"),
                 2019, "orange", True))
-        self.picks.append(SouvenirPick("Mothman Search Team", Location("Point Pleasant", "WV"),
+        self.picks.append(SouvenirPick("Mothman Search Team",
+                Location("Point Pleasant", "WV"),
                 2017, "black", True))
-        self.picks.append(SouvenirPick("Mothman Search Team", Location("Point Pleasant", "WV"),
+        self.picks.append(SouvenirPick("Mothman Search Team",
+                Location("Point Pleasant", "WV"),
                 2017, "green", True))
-        self.picks.append(SouvenirPick("JWT School of Rock", Location("Pikeville", "KY"),
+        self.picks.append(SouvenirPick("JWT School of Rock",
+                Location("Pikeville", "KY"),
                 2016, "black", True))
 
 def tryit():
@@ -297,6 +322,6 @@ def try_read():
     collection.list_all()
 
 if __name__ == '__main__':
-    tryit()
-#    try_open()
-#    try_read()
+#    tryit()
+    try_open()
+    try_read()
