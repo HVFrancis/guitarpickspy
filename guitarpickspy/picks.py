@@ -21,6 +21,9 @@ from location import Location
 import pickle
 
 def str2bool(v):
+    """Function to return True if given a string argument 'True'
+    (Lifted off the Interent, I forgot from whom)
+    """
     return v == 'True'
 
 
@@ -157,10 +160,11 @@ class GuitarPickCollection:
 ##                print(pick)
 
     def search(self, field, value):
-        matching_picks = []
-        for pick in self.picks:
-            if pick.matches(field, value):
-                matching_picks.append(pick)
+        matching_picks = [pick for pick in self.picks if pick.matches(field,value)]
+        # matching_picks = []
+        # for pick in self.picks:
+        #     if pick.matches(field, value):
+        #         matching_picks.append(pick)
         return matching_picks
 
     def write_csv(self, filename):
@@ -293,6 +297,6 @@ def try_read():
     collection.list_all()
 
 if __name__ == '__main__':
-#    tryit()
+    tryit()
 #    try_open()
-    try_read()
+#    try_read()
