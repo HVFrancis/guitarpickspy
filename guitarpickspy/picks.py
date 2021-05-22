@@ -17,7 +17,7 @@ Classes
         a class to manage a collection of picks
 """
 
-from location import Location
+from guitarpickspy.location import Location
 import pickle
 
 def str2bool(v):
@@ -322,6 +322,6 @@ def try_read():
     collection.list_all()
 
 if __name__ == '__main__':
-#    tryit()
-    try_open()
-    try_read()
+    tryit()
+#    try_open()
+#    try_read()

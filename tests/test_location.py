@@ -2,7 +2,7 @@ import pytest
 
 from guitarpickspy.location import Location
 
-def test_constructor():
+def test_init():
     pkv = Location("Pikeville", "KY")
     assert isinstance(pkv, Location)
 
